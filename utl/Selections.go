@@ -1,15 +1,15 @@
 package utl
 
 import (
-	"golang.org/x/net/html"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"golang.org/x/net/html"
 )
 
-type SubSelection []*goquery.Selection
+type Selections []*goquery.Selection
 
-func GetClassStats(s SubSelection) ClassStats {
+func GetClassStats(s Selections) ClassStats {
 	cls := NewClassStats()
 	var total = 0
 	for _, element := range s {
@@ -37,8 +37,8 @@ func GetClassStats(s SubSelection) ClassStats {
 	return cls
 }
 
-func (s SubSelection) GetHeadByFreq(minFreq float64) SubSelection {
-	var out SubSelection
+func (s Selections) GetHeadByFreq(minFreq float64) Selections {
+	var out Selections
 	classStats := GetClassStats(s)
 	for _, stats := range classStats {
 		if minFreq < stats.Freq/float64(stats.Total) {
@@ -49,8 +49,8 @@ func (s SubSelection) GetHeadByFreq(minFreq float64) SubSelection {
 	return out
 }
 
-func (s SubSelection) GetTailByFreq(maxFreq float64) SubSelection {
-	var out SubSelection
+func (s Selections) GetTailByFreq(maxFreq float64) Selections {
+	var out Selections
 	classStats := GetClassStats(s)
 	for _, stats := range classStats {
 		if maxFreq > stats.Freq/float64(stats.Total) {
