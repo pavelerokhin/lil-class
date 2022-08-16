@@ -9,11 +9,34 @@ import (
 
 type ClassStats map[string]*Stats
 
+func (cs ClassStats) GetCommonParentWithin(deltaBetweenElements int) *goquery.Selection {
+	var commonParent *goquery.Selection
+	var parents Selections
+	for _, s := range cs {
+		parents = append(parents, s.GetParents())
+	}
+
+	commonParent = parents[0]
+	maxLength := commonParent.Length()
+	for _, p := range parents {
+		maxLength = MaxInt(maxLength, p.Length())
+		commonParent = commonParent.FilterSelection(p)
+	}
+	if maxLength-commonParent.Length() <= deltaBetweenElements {
+		return commonParent
+	}
+	return nil
+}
+
 type Stats struct {
 	Freq      float64
 	Selection *goquery.Selection
 	Type      string
 	Total     int
+}
+
+func (s *Stats) GetParents() *goquery.Selection {
+	return s.Selection.Parents()
 }
 
 func (s *Stats) String() string {

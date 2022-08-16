@@ -25,12 +25,17 @@ func main() {
 	bet := utl.SelectOnlyWithText(utl.SelectBaseElements(d))
 	sort.Sort(utl.ByTextLength(bet))
 
-	// get 50% of elements
-	betHead := bet.GetHeadByFreq(0.5)
+	// get 80% of elements // TODO: REFACTOR THIS: IT'S NOT COMFORTABLE TO SET minFreq, RATHER SET IT LIKE QUANTILE
+	betHead := bet.GetHeadByFreq(0.2)
 
-	clHead := utl.GetClassStats(betHead)
-	clHead.PrintInOrderFreq()
-
+	csHead := utl.GetClassStats(betHead)
+	csHead.PrintInOrderFreq()
+	commonParent := csHead.GetCommonParentWithin(100)
+	if commonParent != nil {
+		fmt.Printf("common parent found: %v\n", commonParent)
+	} else {
+		fmt.Println("common parent not found")
+	}
 }
 
 func check(err any) {
@@ -45,7 +50,7 @@ func help() {
 	fmt.Println("*****\nUSAGE:\nlilclass <URL>")
 }
 
-func printElements(ee utl.SubSelection) {
+func printElements(ee utl.Selections) {
 	for i, e := range ee {
 		// get class name
 		class, exists := e.Attr("class")
